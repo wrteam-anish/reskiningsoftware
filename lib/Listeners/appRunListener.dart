@@ -4,6 +4,8 @@ enum AppRunStatus {
   initial,
   starting,
   started,
+  restarting,
+  reloading,
   terminating,
   failed,
 }

@@ -29,7 +29,10 @@ class Generator {
 //This will unzip at structure folder
       Directory structureFolder =
           Directory("${directory.path}/extractedTemplate");
+      await structureFolder.delete(recursive: true);
+
       await structureFolder.create(recursive: true);
+
       VariableReplaceTask variableReplaceTask = VariableReplaceTask();
       FileByteReplace fileByteReplace = FileByteReplace();
       ZipUnzip.unzipFile(
@@ -69,7 +72,6 @@ class Generator {
       createZipArchive(structureFolder, generateFileLocation);
       generated = generateFileLocation;
       // throw "HEHEH";
-      await structureFolder.delete(recursive: true);
       onGeneratedPath?.call(generateFileLocation.path);
     } catch (e) {
       log(e.toString());

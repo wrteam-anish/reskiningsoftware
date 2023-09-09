@@ -62,12 +62,12 @@ class _ImageStateWidgetState extends State<ImageStateWidget> {
       }
       if (selectedFile == null && widget.initialFile != null) {
         if (widget.initialFile.isNotEmpty) {
-          return Image.memory(widget.initialFile);
+          return Image.file(File(widget.initialFile));
         } else {
-          return Center(
+          return const Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              children: const [
+              children: [
                 Icon(
                   Icons.file_download_outlined,
                   size: 15,

@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:reskinner_new/UIGenerator/ui.dart';
@@ -10,8 +10,9 @@ class ImageUi extends UI {
   Widget render() {
     dynamic initialFile;
     if (fieldData['initVal'] != null) {
-      initialFile = (base64.decode(fieldData['initVal']));
+      initialFile = (fieldData['initVal']);
     }
+    log("INITIAL FILE IS $fieldData");
 
     return ImageWidgetFormField(
       field: fieldData,

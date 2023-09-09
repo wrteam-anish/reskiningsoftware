@@ -23,11 +23,10 @@ class AppRunner {
       ["run", "-d", selectedDeviceId],
       workingDirectory: workingDirectory,
     );
-    process?.stderr.listen((event) {
-      log(":::::${String.fromCharCodes(event)}");
-    });
+
+    ///Listen error
+    process?.stderr.listen((event) {});
     process?.stdout.listen((event) {
-      log("--${String.fromCharCodes(event)}");
       // processStatus.value = "Running";
       Map process = TerminalProcess.get().value;
       List logs = process['logs'] ?? [];
@@ -37,7 +36,11 @@ class AppRunner {
         AppRunListener.setStatus(AppRunStatus.started);
       }
       if (String.fromCharCodes(event).contains("Restarted application")) {
-        // hotRestartStatus.value = "Restarted";
+        AppRunListener.setStatus(AppRunStatus.started);
+      }
+      if (String.fromCharCodes(event).contains("Reloaded") &&
+          String.fromCharCodes(event).contains("libraries")) {
+        AppRunListener.setStatus(AppRunStatus.started);
       }
     });
 
@@ -51,10 +54,23 @@ class AppRunner {
   }
 
   static void killApp() {
+    process!.stdin.add("q".codeUnits);
     process?.kill();
   }
 
-  static hotRestart() {}
+  static hotRestart() {
+    if (process != null) {
+      AppRunListener.setStatus(AppRunStatus.restarting);
+      process!.stdin.add("R".codeUnits);
+    }
+  }
+
+  static hotReload() {
+    if (process != null) {
+      AppRunListener.setStatus(AppRunStatus.reloading);
+      process!.stdin.add("r".codeUnits);
+    }
+  }
 
   static pubGet() async {
     await Process.start(

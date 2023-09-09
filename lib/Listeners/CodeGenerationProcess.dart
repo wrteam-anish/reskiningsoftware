@@ -42,6 +42,24 @@ class TerminalProcess {
     };
   }
 
+  static void resetButTypeSame() {
+    Map value = _process.value;
+    var type = value['type'];
+
+    _process.value = {
+      "process": {
+        "files": [],
+        "outOf": {
+          "current": 0.0,
+          "total": 0.0,
+        },
+        "fileName": "",
+      },
+      "status": "INITIAL",
+      "type": type,
+    };
+  }
+
   static setProcessStatus(String status) {
     _process.value['status'] = status;
     _process.notifyListeners();

@@ -17,14 +17,29 @@ class _ColorPickWidgetState extends State<ColorPickWidget> {
   bool setInitVal = false;
   List<Color> history = [];
   Color? pickedColor;
+
   @override
-  Widget build(BuildContext context) {
-    if (widget.field.containsKey("initVal") && setInitVal == false) {
+  void initState() {
+    if (widget.field.containsKey("initVal")) {
       pickedColor = Color(int.parse(widget.field['initVal']));
       // Storage.data[widget.field['fieldPattern']] = widget.field['initVal'];
-      setInitVal = true;
+      // setInitVal = true;
     }
+    super.initState();
+  }
 
+  @override
+  void didUpdateWidget(covariant ColorPickWidget oldWidget) {
+    if (widget.field.containsKey("initVal")) {
+      pickedColor = Color(int.parse(widget.field['initVal']));
+      // Storage.data[widget.field['fieldPattern']] = widget.field['initVal'];
+      // setInitVal = true;
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         showDialog(

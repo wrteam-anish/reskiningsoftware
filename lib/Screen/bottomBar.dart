@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -30,6 +31,8 @@ class _BottomBarState extends State<BottomBar> {
     super.didChangeDependencies();
   }
 
+  var logs = [];
+
   @override
   void didUpdateWidget(covariant BottomBar oldWidget) {
     scale = widget.bottomScale;
@@ -47,7 +50,7 @@ class _BottomBarState extends State<BottomBar> {
       color: AppTheme.secondaryColor,
       height: scale.clamp(60, MediaQuery.of(context).size.height - 20),
       child: SingleChildScrollView(
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -66,6 +69,9 @@ class _BottomBarState extends State<BottomBar> {
                           return Icons.run_circle;
                         }
 
+                        if (status == AppRunStatus.restarting) {
+                          return Icons.restart_alt;
+                        }
                         if (status == AppRunStatus.started) {
                           return Icons.pause;
                         }
@@ -77,6 +83,9 @@ class _BottomBarState extends State<BottomBar> {
                       getText(AppRunStatus status) {
                         if (status == AppRunStatus.initial) {
                           return Lable.runApp;
+                        }
+                        if (status == AppRunStatus.restarting) {
+                          return Lable.restartingApp;
                         }
 
                         if (status == AppRunStatus.starting) {
@@ -106,7 +115,9 @@ class _BottomBarState extends State<BottomBar> {
                             return;
                           }
 
-                          if (value == AppRunStatus.starting) {
+                          if (value == AppRunStatus.starting ||
+                              value == AppRunStatus.restarting ||
+                              value == AppRunStatus.reloading) {
                             return;
                           }
 
@@ -142,6 +153,21 @@ class _BottomBarState extends State<BottomBar> {
                     deviceSelector.select();
                   },
                 ),
+                BottomBarItem(
+                    title: Lable.hotReload,
+                    icon: Icons.flash_on,
+                    onTap: () {
+                      AppRunner.hotReload();
+                    }),
+                const SizedBox(
+                  width: 2,
+                ),
+                BottomBarItem(
+                    title: Lable.hotRestart,
+                    icon: Icons.restart_alt_sharp,
+                    onTap: () {
+                      AppRunner.hotRestart();
+                    }),
                 const SizedBox(
                   width: 2,
                 ),
@@ -218,7 +244,7 @@ class _BottomBarState extends State<BottomBar> {
                               : "Errors",
                           icon: Icons.error);
                     }),
-                SizedBox(
+                const SizedBox(
                   width: 5,
                 ),
                 Align(
@@ -227,7 +253,11 @@ class _BottomBarState extends State<BottomBar> {
                       padding: const EdgeInsets.only(right: 8.0),
                       child: GestureDetector(
                         onTap: () {
-                          Errors.clear();
+                          if (selectedTerminalOption == 0) {
+                            TerminalProcess.resetButTypeSame();
+                          } else {
+                            Errors.clear();
+                          }
                         },
                         child: Text(
                           "Clear",
@@ -294,26 +324,28 @@ class _BottomBarState extends State<BottomBar> {
                     child: ListView.builder(
                       shrinkWrap: true,
                       controller: _controller,
-                      itemCount: value['process']['files'].length,
+                      itemCount:
+                          value['type'] == ConsoleProcessType.codeGeneration
+                              ? value['process']['files'].length
+                              : (value['process']['logs'] ?? []).length,
                       // reverse: true,
                       physics: const AlwaysScrollableScrollPhysics(),
                       // shrinkWrap: true,
                       itemBuilder: (context, index) {
-                        var logs = "";
                         var isCodegen =
                             value['type'] == ConsoleProcessType.codeGeneration;
                         if (isCodegen) {
-                          logs = value['process']['files']
+                          logs.add(value['process']['files']
                               .reversed
-                              .toList()[index];
+                              .toList()[index]);
                         } else {
-                          logs = value['process']['logs'][index];
+                          logs.add(value['process']['logs'][index]);
                         }
 
-                        if (logs == "") return const SizedBox.shrink();
-
+                        if (logs.isEmpty) return const SizedBox.shrink();
+                        String decode = utf8.decode(logs.join("\n").codeUnits);
                         return SelectableText(
-                          " ${isCodegen ? 'Current : ' : ''}$logs",
+                          " ${isCodegen ? 'Current : ' : ''}$decode",
                           style: const TextStyle(color: Colors.black),
                         );
                       },

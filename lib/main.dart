@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:desktop_window/desktop_window.dart';
 import 'package:flutter/material.dart';
 import 'package:reskinner_new/Theme/theme.dart';
+import 'package:sqflite/sqflite.dart';
 
 import 'Screen/Widget/Sidebar.dart';
 import 'Screen/bottomBar.dart';
@@ -62,12 +64,23 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
+    var asd = getDatabasesPath();
+    setMinScreenSize();
     DeviceSelector.getFlutterDeviceList();
     Timer.periodic(const Duration(seconds: 25), (timer) {
       DeviceSelector.getFlutterDeviceList();
     });
 
     super.initState();
+  }
+
+  setMinScreenSize() async {
+    try {
+      Size size = await DesktopWindow.getWindowSize();
+      final double width = size.width * 0.8;
+      final double height = size.height * 0.9;
+      await DesktopWindow.setMinWindowSize(Size(width, height));
+    } catch (e) {}
   }
 
   @override
@@ -111,6 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
             color: AppTheme.secondaryColor,
             height: double.infinity,
             child: SideBar(
+              onConfigGenerated: (String path) {},
               onCodegenerationInProgress: () {
                 isCodeGenerated = false;
                 setState(() {});

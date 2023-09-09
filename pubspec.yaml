@@ -55,6 +55,7 @@ dependencies:
   desktop_drop: ^0.4.1
   flutter_colorpicker: ^1.0.3
   docking: ^1.11.1
+  sqflite: ^2.3.0
 
 dev_dependencies:
   flutter_test:

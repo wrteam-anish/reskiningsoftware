@@ -28,6 +28,10 @@ class _FilePickerWidgetState extends State<FilePickerWidget> {
   File? pickedFile;
   @override
   Widget build(BuildContext context) {
+    if (widget.fieldData['initVal'] != null) {
+      pickedFile = File(widget.fieldData['initVal']);
+    }
+
     return GestureDetector(
       onTap: () async {
         FilePickerResult? result = await FilePicker.platform

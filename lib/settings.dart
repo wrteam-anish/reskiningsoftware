@@ -99,6 +99,22 @@ class Settings {
         "noSpace",
       }
     },
+    [
+      {
+        "group": "row",
+        "name": "TEST",
+      },
+      {
+        "fieldName": "This is test",
+        "fieldPattern": "test",
+        "type": "text",
+        "hint": "**********",
+        "validator": {
+          // "required",
+          "noSpace",
+        }
+      },
+    ],
     {
       "fieldName": "Android Google Map API Key",
       "fieldPattern": "andgoogleMapApiKey",
@@ -188,7 +204,7 @@ class Settings {
     ],
     {
       "fieldName": "Google Services JSON",
-      "fieldPattern": "icLauncerXHDPI",
+      "fieldPattern": "jsonFile",
       "fileName": "demo.json",
       "type": "file",
     }
