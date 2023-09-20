@@ -1,7 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
-
 abstract class DataType<T> {
   abstract final T content;
 }
@@ -28,6 +26,7 @@ class ImageType extends DataType {
 }
 
 class ColorType extends DataType<String> {
+  @override
   final String content;
 
   ColorType(this.content);

@@ -78,6 +78,7 @@ class _BottomBarState extends State<BottomBar> {
                         if (status == AppRunStatus.failed) {
                           return Icons.error;
                         }
+                        return Icons.play_arrow_outlined;
                       }
 
                       getText(AppRunStatus status) {
@@ -98,11 +99,12 @@ class _BottomBarState extends State<BottomBar> {
                         if (status == AppRunStatus.failed) {
                           return Lable.failedAppRun;
                         }
+                        return "";
                       }
 
                       return BottomBarItem(
-                        icon: getIcon(value)!,
-                        title: getText(value)!,
+                        icon: getIcon(value),
+                        title: getText(value),
                         isDisabled:
                             selectedDevice == null && codeGenerated == false,
                         disabledToolTipMessage:
@@ -276,8 +278,13 @@ class _BottomBarState extends State<BottomBar> {
                   builder: (context, value, widegt) {
                     var type = value['type'];
                     if (type == ConsoleProcessType.codeGeneration) {
-                      num current = value['process']['outOf']['current'];
-                      num total = value['process']['outOf']['total'];
+                      if (value['process'] == null) {
+                        return const SizedBox.shrink();
+                      }
+
+                      num current = value['process']['outOf']?['current'] ?? 0;
+                      num total = value['process']['outOf']?['total'] ?? 0;
+
                       String status = value['status'] ?? "";
                       var process = "$current / $total";
 

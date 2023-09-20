@@ -30,11 +30,14 @@ class _ColorPickWidgetState extends State<ColorPickWidget> {
 
   @override
   void didUpdateWidget(covariant ColorPickWidget oldWidget) {
-    if (widget.field.containsKey("initVal")) {
-      pickedColor = Color(int.parse(widget.field['initVal']));
-      // Storage.data[widget.field['fieldPattern']] = widget.field['initVal'];
-      // setInitVal = true;
+    if (oldWidget.field != widget.field) {
+      if (widget.field.containsKey("initVal")) {
+        pickedColor = Color(int.parse(widget.field['initVal']));
+        // Storage.data[widget.field['fieldPattern']] = widget.field['initVal'];
+        // setInitVal = true;
+      }
     }
+
     super.didUpdateWidget(oldWidget);
   }
 

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:mustachex/mustachex.dart';
 
 import '../Data/dataTypes.dart';
@@ -7,6 +9,7 @@ class VariableReplaceTask {
     Map<String, dynamic> variables =
         storage.map((key, value) => MapEntry(key, value.content));
     String fileData = String.fromCharCodes(data);
+    log("REPLACABLE DATA $variables");
     MustachexProcessor processor = MustachexProcessor(
       initialVariables: variables,
       missingVarFulfiller: (variable) {

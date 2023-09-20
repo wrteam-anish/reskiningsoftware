@@ -2,11 +2,13 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:archive/archive_io.dart';
+import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:reskinner_new/CodeGenerator/fileByteReplace.dart';
 import 'package:reskinner_new/CodeGenerator/variableReplace.dart';
 import 'package:reskinner_new/Data/data.dart';
 import 'package:reskinner_new/Listeners/errorListener.dart';
+import 'package:reskinner_new/Utils/appRunner.dart';
 import 'package:reskinner_new/Utils/utils.dart';
 import 'package:reskinner_new/Utils/zipUnzip.dart';
 
@@ -15,10 +17,12 @@ import '../settings.dart';
 
 class Generator {
   static File? generated;
-  generateCode(Map<String, DataType> data,
-      {required String path,
-      Function(String path)? onGeneratedPath,
-      Function()? onCodegenerationInProgress}) async {
+  generateCode(
+    Map<String, DataType> data, {
+    required String path,
+    Function(String path)? onGeneratedPath,
+    Function()? onCodegenerationInProgress,
+  }) async {
     try {
       ///
       onCodegenerationInProgress?.call();
@@ -26,12 +30,13 @@ class Generator {
 
       ///
       Directory directory = await getApplicationDocumentsDirectory();
-//This will unzip at structure folder
+      //This will unzip at structure folder
       Directory structureFolder =
           Directory("${directory.path}/extractedTemplate");
-      await structureFolder.delete(recursive: true);
 
       await structureFolder.create(recursive: true);
+      AppRunner.workingDirectory =
+          "${structureFolder.path}/${Settings.selfFolderName}/";
 
       VariableReplaceTask variableReplaceTask = VariableReplaceTask();
       FileByteReplace fileByteReplace = FileByteReplace();
@@ -60,13 +65,14 @@ class Generator {
           return renderd;
         },
       );
+      // OpenFilex.open(AppRunner.workingDirectory);
 
       var generateFileLocation =
           File("$path/${Settings.generatedFileName}.zip");
-
+      log("wasda${structureFolder.path}");
 ////If already available then we will delete it
       if (await generateFileLocation.exists()) {
-        await generateFileLocation.delete();
+        await generateFileLocation.delete(recursive: true);
       }
 
       createZipArchive(structureFolder, generateFileLocation);

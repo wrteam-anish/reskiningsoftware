@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:reskinner_new/Listeners/CodeGenerationProcess.dart';
 import 'package:reskinner_new/Listeners/appRunListener.dart';
+import 'package:reskinner_new/Listeners/errorListener.dart';
 import 'package:reskinner_new/Utils/zipUnzip.dart';
 
 import '../CodeGenerator/generator.dart';
@@ -25,7 +26,9 @@ class AppRunner {
     );
 
     ///Listen error
-    process?.stderr.listen((event) {});
+    process?.stderr.listen((event) {
+      Errors.error(String.fromCharCodes(event));
+    });
     process?.stdout.listen((event) {
       // processStatus.value = "Running";
       Map process = TerminalProcess.get().value;
@@ -46,9 +49,9 @@ class AppRunner {
 
     int? exitCode = await process?.exitCode;
     if (exitCode == 0) {
-      // AppRunListener.setStatus(AppRunStatus.started);
       AppRunListener.setStatus(AppRunStatus.initial);
     } else {
+      log("STATUS CODE IS $exitCode");
       AppRunListener.setStatus(AppRunStatus.failed);
     }
   }
@@ -102,9 +105,9 @@ class AppRunner {
       "${directory.path}/folderForAppGenerate",
     );
     await folderForAppGenerate.create(recursive: true);
-    workingDirectory =
-        "${folderForAppGenerate.path}/${Settings.selfFolderName}/";
-
+    // workingDirectory =
+    //     "${folderForAppGenerate.path}/${Settings.selfFolderName}/";
+    log("WROKKK ${workingDirectory}");
     await ZipUnzip.unzipFile(
       logProcess: false,
       zipFile: Generator.generated!,

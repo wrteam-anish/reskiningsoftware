@@ -34,7 +34,7 @@ class Settings {
   static List fields = [
     {
       "fieldName": "App name",
-      "fieldPattern": "className",
+      "fieldPattern": "appName",
       "type": "text",
       "keyboard": "number",
       "hint": "My app",
@@ -138,7 +138,7 @@ class Settings {
     {
       "fieldName": "App icon AA",
       "fieldPattern": "icLauncerHDPI",
-      "fileName": "demo.png",
+      "fileName": "/mipmap-hdpi/ic_launcher.png",
       "type": "image",
       // 'required':true
     },

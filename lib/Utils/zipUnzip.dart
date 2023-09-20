@@ -38,7 +38,7 @@ class ZipUnzip {
             "current": curr,
             "total": archive.numberOfFiles(),
           };
-          await Future.delayed(const Duration(milliseconds: 0));
+          await Future.delayed(const Duration(milliseconds: 10));
 
           if (logProcess != false) {
             if (curr == archive.numberOfFiles()) {
