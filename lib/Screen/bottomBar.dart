@@ -323,7 +323,8 @@ class _BottomBarState extends State<BottomBar> {
         if (selectedTerminalOption == 0)
           Container(
             // color: Colors.yellow,
-            height: scale - 90,
+            height:
+                ((scale - 90).isNegative ? scale : (scale - 90)).clamp(60, 500),
             child: ValueListenableBuilder<Map>(
                 valueListenable: TerminalProcess.listen(),
                 builder: (context, value, w) {
